@@ -124,10 +124,14 @@ class XMLDocument {
    */
   private function createDocument($root_name, Namespaces $namespaces, $xml) {
     $document = new DOMDocument();
-    isset($xml) ? // Load from XML or create the root node.
-            $document->loadXML($xml) :
-            $document->appendChild(new DOMElement($root_name, NULL, $namespaces->getDefaultURI()));
-    ;
+    
+    if (!empty($xml)) { // Load from XML or create the root node.
+      $document->loadXML($xml);
+    }
+    else {
+      $document->appendChild(new DOMElement($root_name, NULL, $namespaces->getDefaultURI()));
+    }
+    
     $this->namespaces->addNamespacesAttributesTo($document->documentElement);
     return $document;
   }
