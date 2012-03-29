@@ -40,6 +40,14 @@ function xml_form_elements_elements() {
     '#input' => TRUE,
     '#process' => array('xml_form_elements_process_datepicker'),
   );
+  $type['defaultable_item'] = array(
+    '#input' => FALSE,
+    '#tree' => TRUE,
+  );
+  $type['defaultable_markup'] = array(
+    '#input' => FALSE,
+    '#tree' => TRUE,
+  );
   return $type;
 }
 
@@ -81,6 +89,12 @@ function xml_form_elements_theme() {
     'datepicker' => array(
       'arguments' => array('element'),
       'file' => 'Datepicker.inc'
+    ),
+    'defaultable_item' => array(
+      'arguments' => array('element'),
+    ),
+    'defaultable_markup' => array(
+      'arguments' => array('element'),
     ),
   );
 }
@@ -258,3 +272,41 @@ function xml_form_elements_process_datepicker(array $element, $edit, array &$for
   return Datepicker::Process($element, $edit, $form_state, $complete_form);
 }
 
+/**
+ *  Copypasta from Drupal's form.inc theme_item, except it will use the 
+ *    default value if the value is not specified. (To allow population 
+ *    by XMLFormsPrePopulator (or whatever it's called.))
+ */
+function theme_defaultable_item($element) {
+  $value = ((!empty($element['#value']))?
+    $element['#value'] :
+    $element['#default_value']);
+  $children = ((!empty($element['#children']))?
+    $element['#children']:
+    ''
+  );
+
+  if (!empty($value) || (empty($value) && !empty($children))) {
+    return theme(
+      'form_element',
+      $element, 
+      $value . $children
+    );
+  }
+}
+
+/**
+ *  Copypasta from Drupal's form.inc theme_markup, except it will use the 
+ *    default value if the value is not specified. (To allow population 
+ *    by XMLFormsPrePopulator (or whatever it's called.))
+ */
+function theme_defaultable_markup($element) {
+  $value = ((!empty($element['#value']))?
+    $element['#value'] :
+    $element['#default_value']);
+  $children = ((!empty($element['#children']))?
+    $element['#children']:
+    '');
+
+  return $value . $children;
+}
