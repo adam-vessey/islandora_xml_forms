@@ -251,7 +251,7 @@ function xml_form_builder_get_form(array &$form_state, $form_name, $xml = NULL) 
     drupal_set_message(t('The form "%name" does not exist.', array('%name' => $form_name)));
     return FALSE;
   }
-  else if (!XMLFormDatabase::Valid($form_name)) {
+  elseif (!XMLFormDatabase::Valid($form_name)) {
     drupal_set_message(t('The drupal form "%name" exists but is not valid please notify the administrator.', array('%name' => $form_name)));
     return FALSE;
   }
@@ -267,18 +267,40 @@ function xml_form_builder_get_form(array &$form_state, $form_name, $xml = NULL) 
      * Deals with a bug in drupals AHAH, where the user would be redirected to a different page.
      * This is fixed in Drupal 7.
      * 
-     * This bit of code ensures that the url from which this function is called is the url where the code submits. 
+     * This bit of code ensures that the url from which this function is called
+     *   is the url where the code submits. 
      * Rather than the last used AHAH callback.
      */
     $xml_form['#action'] = $form_state['storage']['#action'] = isset($form_state['storage']['#action']) ? $form_state['storage']['#action'] : url($_GET['q']); // AHAH bug workaround. 
     $form = $xml_form->toArray($form_state);
   } catch (Exception $e) {
     /**
-     * Catch any errors that occured and display them to the user so that they may correct their form definition.
+     * Catch any errors that occured and display them to the user so that they
+     *   may correct their form definition.
      */
     $msg = "File: {$e->getFile()}<br/>Line: {$e->getLine()}<br/>Error: {$e->getMessage()}";
     drupal_set_message(filter_xss($msg), 'error');
     return FALSE;
   }
   return $form;
+}
+
+/** 
+ *  implementation of hook_forms()
+ *  Allows one to drupal_get_form(whatever_form_name [, xml_string_to_populate])
+ */
+function xml_form_builder_forms($form_name, $args) {
+  module_load_include('inc', 'xml_form_builder', 'XMLFormDatabase');
+  module_load_include('inc', 'xml_form_api', 'XMLForm');
+  module_load_include('inc', 'xml_form_api', 'XMLFormDefinition');
+  
+  array_unshift($args, $form_name);
+  if (XMLFormDatabase::Exists($form_name) && XMLFormDatabase::Valid($form_name)) {
+    return array(
+      $form_name => array(
+        'callback' => 'xml_form_builder_get_form',
+        'callback arguments' => $args,
+      ),
+    );
+  }
 }
