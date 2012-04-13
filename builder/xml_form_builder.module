@@ -4,8 +4,6 @@
  * @file
  *
  */
-module_load_include('inc', 'xml_form_builder', 'Edit'); // Needed to make use of AHAH functions...
-module_load_include('inc', 'xml_form_builder', 'Preview'); // Needed to make use of AHAH functions...
 
 /**
  * Constants
@@ -22,6 +20,15 @@ define('MENU_XML_FORM_BUILDER_EDIT', 'admin/content/xml/form/%/edit');
 define('MENU_XML_FORM_BUILDER_DELETE', 'admin/content/xml/form/%/delete');
 define('MENU_CALLBACK_XML_FORM_BUILDER_EXPORT', 'admin/content/xml/form/%/export');
 define('MENU_CALLBACK_XML_FORM_BUILDER_SAVE', 'admin/content/xml/form/%/edit/save');
+
+/**
+ * implementation of Drupal's hook_init()
+ */
+function xml_form_builder_init() {
+  //Couple of includes required to make use of AHAH functions.
+  module_load_include('inc', 'xml_form_builder', 'Edit');
+  module_load_include('inc', 'xml_form_builder', 'Preview');
+}
 
 /**
  * Implements hook_menu. Register menus.
