@@ -83,7 +83,7 @@ function xml_form_elements_preprocess_tabs_content(&$vars) {
     $parents = $tabs['#array_parents'];
     $name = array_pop($parents);
     $vars['content'] = '';
-    drupal_set_message("Attempted to create a tabs: '$name', without defining any child tabpanels.", 'error');
+    drupal_set_message(t("Attempted to create a tabs: '%name', without defining any child tabpanels.", array('%name' => $name)), 'error');
   }
 }
 
