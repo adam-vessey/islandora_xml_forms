@@ -232,7 +232,9 @@ class Create implements Action {
   }
 
   /**
-   *
+   * @todo Try to get the path based on the parent element; we know what it is,
+   *   so just look in the schema for xs:$parent->tagName()/local-name()/however
+   *   you get the local name of the element.
    * @param DOMNode $child
    * @param DOMElement $parent 
    */
