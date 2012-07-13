@@ -24,6 +24,7 @@ define('THEME_XML_FORM_ELEMENTS_TAGS', 'tags');
 define('THEME_XML_FORM_ELEMENTS_TAGS_CONTENT', 'tags_content');
 define('THEME_XML_FORM_ELEMENTS_TAG', 'tag');
 define('THEME_XML_FORM_ELEMENTS_DATEPICKER', 'datepicker');
+define('THEME_XML_FORM_ELEMENTS_DATETIMEPICKER', 'datetimepicker');
 define('THEME_XML_FORM_ELEMENTS_VALIDATE', 'validate');
 define('THEME_XML_FORM_ELEMENTS_PAGES', 'pages');
 define('THEME_XML_FORM_ELEMENTS_PAGE', 'xml_form_elements_page');
@@ -184,6 +185,10 @@ function xml_form_elements_elements() {
       '#input' => TRUE,
       '#process' => array('xml_form_elements_process_datepicker')
     ),
+    'datetimepicker' => array(
+      '#input' => TRUE,
+      '#process' => array('xml_form_elements_process_datetimepicker')
+    ),
     'pages' => array(
       '#input' => TRUE,
       '#process' => array(
@@ -247,10 +252,14 @@ function xml_form_elements_theme() {
     ),
     THEME_XML_FORM_ELEMENTS_DATEPICKER => array(
       'arguments' => array('element'),
-      'file' => 'Datepicker.inc'
+      'file' => 'includes/Datepicker.inc'
+    ),
+    THEME_XML_FORM_ELEMENTS_DATETIMEPICKER => array(
+      'arguments' => array('element'),
+      'file' => 'includes/Datetimepicker.inc'
     ),
     THEME_XML_FORM_ELEMENTS_VALIDATE => array(
-      'file' => 'Validate.inc'
+      'file' => 'includes/Validate.inc'
     ),
     THEME_XML_FORM_ELEMENTS_PAGES => array(
       'arguments' => array('element' => NULL),
@@ -368,6 +377,11 @@ function xml_form_elements_process_tag(array $element, $edit, array &$form_state
 function xml_form_elements_process_datepicker(array $element, $edit, array &$form_state, array $complete_form = NULL) {
   module_load_include('inc', 'xml_form_elements', 'includes/Datepicker');
   return Datepicker::Process($element, $edit, $form_state, $complete_form);
+}
+
+function xml_form_elements_process_datetimepicker(array $element, $edit, array &$form_state, array $complete_form = NULL) {
+  module_load_include('inc', 'xml_form_elements', 'includes/Datetimepicker');
+  return Datetimepicker::Process($element, $edit, $form_state, $complete_form);
 }
 
 /**
